@@ -94,5 +94,6 @@ kitty(){
     sudo cp "$fuente_zip" "$destino_fuentes" && \
     sudo 7z x -o"$destino_fuentes" "$destino_fuentes/kitty.txz"  && \
     sudo rm -rf "$destino_fuentes/kitty.txz"
+    sudo tar -xf "$destino_fuentes/kitty.tar"
 }
 main
