@@ -25,7 +25,7 @@ main(){
         1) req ;;
         2) bspwm ;;
         3) conf; polybar ;;  # Ejecuta dos funciones
-        4) polybar ;;
+        4) kitty ;;
         5) req; bspwm; conf; polybar ;;
         6) exit 0 ;;
         *) echo "Opción inválida"; sleep 1 ;;
@@ -60,8 +60,10 @@ confBspwm(){
 }
 polybar() {
     # Definir rutas
-    local ruta_script="$(dirname "$(readlink -f "$0")")"
-    local fuente_zip="$ruta_script/recursos/Hack.zip"
+    #local ruta_script="$(dirname "$(readlink -f "$0")")"
+    #local fuente_zip="$ruta_script/recursos/Hack.zip"
+    local fuente_zip="$ruta/recursos/Hack.zip"
+
     local destino_fuentes="/usr/local/share/fonts"
 
     # Verificar si existe el archivo ZIP
@@ -84,6 +86,15 @@ polybar() {
     # Actualizar caché de fuentes
     sudo fc-cache -f -v
 
-    echo "Fuentes Hack instaladas correctamente!"
+    echo "[+] Fuentes Hack instaladas correctamente!"
+    #configuracion de la kitty
+
+}
+kitty(){
+    #configuracion kitty
+    sudo mkdir -p /opt/kitty
+    "sudo mv $ruta/recursos/kitty.txz /opt/kitty"
+    sudo pacman -Srn kitty
+    cd /opt/kitty &&  sudo 7z x kitty.txz
 }
 main
