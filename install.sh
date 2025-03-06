@@ -60,10 +60,7 @@ confBspwm(){
 }
 polybar() {
     # Definir rutas
-    #local ruta_script="$(dirname "$(readlink -f "$0")")"
-    #local fuente_zip="$ruta_script/recursos/Hack.zip"
     local fuente_zip="$ruta/recursos/Hack.zip"
-
     local destino_fuentes="/usr/local/share/fonts"
 
     # Verificar si existe el archivo ZIP
@@ -90,11 +87,12 @@ polybar() {
     #configuracion de la kitty
 
 }
+
 kitty(){
-    #configuracion kitty
-    sudo mkdir -p /opt/kitty
-    "sudo mv $ruta/recursos/kitty.txz /opt/kitty"
-    sudo pacman -Srn kitty
-    cd /opt/kitty &&  sudo 7z x kitty.txz
+    local fuente_zip="$ruta/recursos/kitty.txz"
+    local destino_fuentes="/opt/kitty"
+    sudo cp "$fuente_zip" "$destino_fuentes" && \
+    sudo 7z x -o"$destino_fuentes" "$destino_fuentes/kitty.txz"  && \
+    sudo rm -rf "$destino_fuentes/kitty.txz"
 }
 main
