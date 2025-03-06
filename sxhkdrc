@@ -114,3 +114,6 @@ super + shift + {Left,Down,Up,Right}
 # Custon Resize 
 super + alt + {Left,Down,Up,Right}
 	/home/trojan/.config/bspwm/scripts/bspwm_resize {west,south,north,east}
+
+super + shift + f 
+	/usr/bin/firefox
