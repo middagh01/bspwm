@@ -89,14 +89,24 @@ polybar() {
 }
 
 kitty(){
-    local fuente_zip="$ruta/recursos/kitty.txz"
-    local destino_fuentes="/opt/kitty"
-    sudo cp "$fuente_zip" "$destino_fuentes" && \
-    sudo 7z x -o"$destino_fuentes" "$destino_fuentes/kitty.txz"  && \
-    sleep 3
-    sudo rm -rf "$destino_fuentes/kitty.txz"
-    sudo tar -xf "$destino_fuentes/kitty.tar"
-    sudo rm -rf "$destino_fuentes/kitty.tar"
+kitty() {
+    # 1. Definir rutas
+    local fuente_txz="$ruta/recursos/kitty.txz"
+    local destino="/opt/kitty"
+
+    # 4. Crear directorio de destino
+    sudo mkdir -p "$destino" || return 1
+
+    # 5. Extracción en un solo paso
+    echo "Descomprimiendo kitty.txz..."
+    if ! sudo tar -xJf "$fuente_txz" -C "$destino" --strip-components=1; then
+        echo "[-] Error en la extracción"
+        return 1
+    fi
+    # 6. Limpieza y verificación
+    echo "[+] Instalación completada en $destino"
+    echo "Versión instalada: $($destino/bin/kitty --version)"
+}
 
 }
 main
