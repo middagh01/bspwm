@@ -60,7 +60,7 @@ confBspwm(){
 }
 polybar(){
     #os.system("mkdir -p ~/.config/bspwm/scripts && mkdir ~/.config/sxhkd")
-    cp $ruta/recursos/Hack.zip /usr/local/share/fonts/
-    7z x /usr/local/share/fonts/Hack.zip
+    sudo mv $ruta/recursos/Hack.zip /usr/local/share/fonts/
+    sudo 7z x /usr/local/share/fonts/Hack.zip
     rm -r /usr/local/share/fonts/Hack.zip
 }
