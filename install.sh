@@ -58,10 +58,32 @@ confBspwm(){
     cp $ruta/bspwm_resize ~/.config/bspwm/scripts/
     chmod +x ~/.config/bspwm/scripts/bspwm_resize
 }
-polybar(){
-    #os.system("mkdir -p ~/.config/bspwm/scripts && mkdir ~/.config/sxhkd")
-    sudo mv $ruta/recursos/Hack.zip /usr/local/share/fonts/
-    sudo 7z x/usr/local/share/fonts/Hack.zip
-    sudo rm -rf /usr/local/share/fonts/Hack.zip
+polybar() {
+    # Definir rutas
+    local ruta_script="$(dirname "$(readlink -f "$0")")"
+    local fuente_zip="$ruta_script/recursos/Hack.zip"
+    local destino_fuentes="/usr/local/share/fonts"
+
+    # Verificar si existe el archivo ZIP
+    if [ ! -f "$fuente_zip" ]; then
+        echo "Error: El archivo $fuente_zip no existe"
+        return 1
+    fi
+
+    # Verificar si 7z está instalado
+    if ! command -v 7z &> /dev/null; then
+        echo "Error: 7-Zip no está instalado. Instala con: sudo pacman -S p7zip"
+        return 1
+    fi
+
+    # Copiar (en lugar de mover) y descomprimir
+    sudo cp "$fuente_zip" "$destino_fuentes" && \
+    sudo 7z x -o"$destino_fuentes" "$destino_fuentes/Hack.zip" && \
+    sudo rm "$destino_fuentes/Hack.zip"
+
+    # Actualizar caché de fuentes
+    sudo fc-cache -f -v
+
+    echo "Fuentes Hack instaladas correctamente!"
 }
 main
