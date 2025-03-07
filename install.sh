@@ -57,6 +57,7 @@ confBspwm(){
     cp $ruta/sxhkdrc ~/.config/sxhkd/
     cp $ruta/bspwm_resize ~/.config/bspwm/scripts/
     chmod +x ~/.config/bspwm/scripts/bspwm_resize
+    chmod +x ~/.config/bspwm/bspwmrc
 }
 polybar() {
     # Definir rutas
@@ -88,25 +89,23 @@ polybar() {
 
 }
 
-kitty(){
 kitty() {
     # 1. Definir rutas
-    local fuente_txz="$ruta/recursos/kitty.txz"
+    local fuente_txz="$ruta/kitty/kitty.txz"
     local destino="/opt/kitty"
 
-    # 4. Crear directorio de destino
     sudo mkdir -p "$destino" || return 1
-
-    # 5. Extracción en un solo paso
     echo "Descomprimiendo kitty.txz..."
-    if ! sudo tar -xJf "$fuente_txz" -C "$destino" --strip-components=1; then
+    if ! sudo tar -xJf "$fuente_txz" -C "$destino"; then
         echo "[-] Error en la extracción"
         return 1
     fi
-    # 6. Limpieza y verificación
     echo "[+] Instalación completada en $destino"
     echo "Versión instalada: $($destino/bin/kitty --version)"
+    sudo pacman -Rns kitty --noconfirm
+    mv $ruta/kitty/color.ini ~/.config/kitty/
+    mv $ruta/kitty/kitty.conf ~/.config/kitty/
 }
 
-}
+
 main
