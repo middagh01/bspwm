@@ -103,8 +103,8 @@ kitty() {
     echo "[+] Instalación completada en $destino"
     echo "Versión instalada: $($destino/bin/kitty --version)"
     sudo pacman -Rns kitty --noconfirm
-    mv $ruta/kitty/color.ini ~/.config/kitty/
-    mv $ruta/kitty/kitty.conf ~/.config/kitty/
+    mv "$ruta/kitty/color.ini" "$HOME/.config/kitty/"
+    mv "$ruta/kitty/kitty.conf" "$HOME/.config/kitty/"
 }
 
 
