@@ -17,3 +17,5 @@ bspc rule -a mplayer2 state=floating
 bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 vmware-user-suid-wrapper &
+/usr/bin/feh --bg-fill /opt/image/fondo.jpg &
+~/.config/polybar/./launch.sh &

@@ -37,13 +37,15 @@ actualizacion(){
     sudo pacman  -S --noconfirm sudo pacman -S libconfig-devel dbus-devel libev-devel libepoxy-devel pcre2-devel pixman-devel xorgproto libx11-devel libxcb-devel libxcb-composite-devel libxcb-damage-devel libxcb-glx-devel libxcb-image-devel libxcb-present-devel libxcb-randr-devel libxcb-render-devel libxcb-render-util-devel libxcb-shape-devel libxcb-xfixes-devel xcb-util-devel mesa-devel meson ninja uthash
     sudo pacman  -S --noconfirm base-devel git vim xcb-util xcb-util-wm xcb-util-keysyms xcb-util-xrm libxcb xorg-xrandr alsa-lib libxinerama
     sudo pacman -S --noconfirm bspwm kitty polybar rofi meson cmake libev uthash libepoxy pkgconf xorg-server xorg-xinit glfw-x11
-    sudo pacman -S --noconfirm 7zip zsh neofetch
+    sudo pacman -S --noconfirm 7zip zsh neofetch imagemagick
     sleep 2
     echo "[+] Requetimientos instalados correctamente"
 }
 
 bspwm(){
-    mkdir -p ~/repos ~/.config/bspwm/scripts ~/.config/sxhkd ~/.config/polybar /usr/local/share/fonts
+    mkdir -p ~/repos ~/.config/bspwm/scripts ~/.config/sxhkd ~/.config/polybar /usr/local/share/fonts 
+    sudo mkdir -p /opt/image /root/.config/kitty
+    sudo mkdir -p /usr/share/fonts/truetype/
     cd ~/repos && git clone https://github.com/baskerville/bspwm.git
     cd ~/repos/bspwm && make && sudo make install
     cd ~/repos && git clone https://github.com/baskerville/sxhkd.git
@@ -53,9 +55,9 @@ bspwm(){
     ninja -C build install
 }
 confBspwm(){
-    cp $ruta/bspwmrc ~/.config/bspwm/
-    cp $ruta/sxhkdrc ~/.config/sxhkd/
-    cp $ruta/bspwm_resize ~/.config/bspwm/scripts/
+    cp "$ruta/bspwmrc" "$HOME/.config/bspwm/"
+    cp "$ruta/sxhkdrc" "$HOME/.config/sxhkd/"
+    cp "$ruta/bspwm_resize" "$HOME/.config/bspwm/scripts/"
     chmod +x ~/.config/bspwm/scripts/bspwm_resize
     chmod +x ~/.config/bspwm/bspwmrc
 }
@@ -90,9 +92,30 @@ polybar() {
 }
 
 kitty() {
+    #configuracion de polybar
+    local repo_polybar="$HOME/repos/blue-sky/polybar"
+    local config_polybar="$HOME/.config/polybar"
+    cd ~/repos && git clone https://github.com/VaughnValle/blue-sky.git
+
+    if [ -d "$repo_polybar" ]; then
+        echo "Copiando configuración desde el repositorio..."
+        mkdir -p "$config_polybar"
+        cp -r "$repo_polybar"/* "$config_polybar"
+    else
+        echo "Error: Repositorio no encontrado en $repo_polybar"
+        exit 1
+    fi
+
     # 1. Definir rutas
     local fuente_txz="$ruta/kitty/kitty.txz"
     local destino="/opt/kitty"
+    local fonds="$HOME/repos/blue-sky/polybar/"
+    local fondsfin="/usr/share/fonts/truetype/"
+
+    local img= "$ruta/recursos/fondo.jpg"
+    local imagefin ="/opt/image/fondo.jpg"
+    cp "$img" "$imagefin"
+    cp -r "$fonds"/* "$fondsfin"
 
     sudo mkdir -p "$destino" || return 1
     echo "Descomprimiendo kitty.txz..."
@@ -105,6 +128,9 @@ kitty() {
     sudo pacman -Rns kitty --noconfirm
     mv "$ruta/kitty/color.ini" "$HOME/.config/kitty/"
     mv "$ruta/kitty/kitty.conf" "$HOME/.config/kitty/"
+    sudo mv "$HOME/.config/kitty/*" "/root/.config/kitty/"
+    sudo fc-cache -f -v
+
 }
 
 
