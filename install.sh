@@ -26,7 +26,8 @@ main(){
         2) bspwm ;;
         3) conf; polybar ;;  # Ejecuta dos funciones
         4) kitty ;;
-        5) req; bspwm; conf; polybar ;;
+        #5) req; bspwm; conf; polybar ;;
+        5) picom ;;
         6) exit 0 ;;
         *) echo "Opción inválida"; sleep 1 ;;
     esac
@@ -37,13 +38,13 @@ req(){
     sudo pacman  -S --noconfirm sudo pacman -S libconfig-devel dbus-devel libev-devel libepoxy-devel pcre2-devel pixman-devel xorgproto libx11-devel libxcb-devel libxcb-composite-devel libxcb-damage-devel libxcb-glx-devel libxcb-image-devel libxcb-present-devel libxcb-randr-devel libxcb-render-devel libxcb-render-util-devel libxcb-shape-devel libxcb-xfixes-devel xcb-util-devel mesa-devel meson ninja uthash
     sudo pacman  -S --noconfirm base-devel git vim xcb-util xcb-util-wm xcb-util-keysyms xcb-util-xrm libxcb xorg-xrandr alsa-lib libxinerama
     sudo pacman -S --noconfirm bspwm kitty polybar rofi meson cmake libev uthash libepoxy pkgconf xorg-server xorg-xinit glfw-x11
-    sudo pacman -S --noconfirm 7zip zsh neofetch imagemagick bat feh
+    sudo pacman -S --noconfirm 7zip zsh neofetch imagemagick bat feh firefox
     sleep 2
     echo "[+] Requetimientos instalados correctamente"
 }
 
 bspwm(){
-    mkdir -p ~/repos ~/.config/bspwm/scripts ~/.config/sxhkd ~/.config/polybar 
+    mkdir -p ~/repos ~/.config/bspwm/scripts ~/.config/sxhkd ~/.config/polybar ~/.config/picom
     sudo mkdir -p /usr/local/share/fonts
     sudo mkdir -p /opt/image /root/.config/kitty
     sudo mkdir -p /usr/share/fonts/truetype/
@@ -129,7 +130,11 @@ kitty() {
 
     echo "Imagen copiada correctamente a $imagefin"
 
-
+picom(){
+    local rutai="$ruta/recursos/picom.conf"
+    local rutaf="$HOME/.config/picom"
+    cp "$rutai" "$rutaf"
+}
 
 
 
