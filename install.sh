@@ -32,18 +32,19 @@ main(){
     esac
 }
 ruta=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
-actualizacion(){
+req(){
     echo "[+] Instalando requerimientos..."
     sudo pacman  -S --noconfirm sudo pacman -S libconfig-devel dbus-devel libev-devel libepoxy-devel pcre2-devel pixman-devel xorgproto libx11-devel libxcb-devel libxcb-composite-devel libxcb-damage-devel libxcb-glx-devel libxcb-image-devel libxcb-present-devel libxcb-randr-devel libxcb-render-devel libxcb-render-util-devel libxcb-shape-devel libxcb-xfixes-devel xcb-util-devel mesa-devel meson ninja uthash
     sudo pacman  -S --noconfirm base-devel git vim xcb-util xcb-util-wm xcb-util-keysyms xcb-util-xrm libxcb xorg-xrandr alsa-lib libxinerama
     sudo pacman -S --noconfirm bspwm kitty polybar rofi meson cmake libev uthash libepoxy pkgconf xorg-server xorg-xinit glfw-x11
-    sudo pacman -S --noconfirm 7zip zsh neofetch imagemagick
+    sudo pacman -S --noconfirm 7zip zsh neofetch imagemagick bat feh
     sleep 2
     echo "[+] Requetimientos instalados correctamente"
 }
 
 bspwm(){
-    mkdir -p ~/repos ~/.config/bspwm/scripts ~/.config/sxhkd ~/.config/polybar /usr/local/share/fonts 
+    mkdir -p ~/repos ~/.config/bspwm/scripts ~/.config/sxhkd ~/.config/polybar 
+    sudo mkdir -p /usr/local/share/fonts
     sudo mkdir -p /opt/image /root/.config/kitty
     sudo mkdir -p /usr/share/fonts/truetype/
     cd ~/repos && git clone https://github.com/baskerville/bspwm.git
@@ -54,7 +55,7 @@ bspwm(){
     cd ~/repos/picom  && meson setup --buildtype=release build  && ninja -C build
     ninja -C build install
 }
-confBspwm(){
+conf(){
     cp "$ruta/bspwmrc" "$HOME/.config/bspwm/"
     cp "$ruta/sxhkdrc" "$HOME/.config/sxhkd/"
     cp "$ruta/bspwm_resize" "$HOME/.config/bspwm/scripts/"
@@ -112,10 +113,31 @@ kitty() {
     local fonds="$HOME/repos/blue-sky/polybar/"
     local fondsfin="/usr/share/fonts/truetype/"
 
-    local img= "$ruta/recursos/fondo.jpg"
-    local imagefin ="/opt/image/fondo.jpg"
-    cp "$img" "$imagefin"
-    cp -r "$fonds"/* "$fondsfin"
+    local img="$ruta/recursos/fondo.jpg"
+    local imagefin="/opt/image/"
+    #sudo cp "$img" "$imagefin"
+    sudo cp -r "$fonds"/* "$fondsfin"
+
+    if [ ! -f "$img" ]; then
+    echo "Error: La imagen no existe en $img"
+    exit 1
+    fi
+
+    # Copiar la imagen a /opt/image/
+    echo "Copiando la imagen desde $img a $imagefin"
+    sudo cp "$img" "$imagefin"
+
+    echo "Imagen copiada correctamente a $imagefin"
+
+
+
+
+
+
+
+
+
+
 
     sudo mkdir -p "$destino" || return 1
     echo "Descomprimiendo kitty.txz..."
