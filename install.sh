@@ -160,5 +160,9 @@ zsh(){
     cp "$zshi" "$zshf"
     ln -s -f "$HOME/.zshrc" ".zshrc"
 }
+burpsuite(){
+    cd /usr/bin/ || sudo touch burpsuite-launcher
+    sudo chmod +x burpsuite-launcher
+}
 
 main
