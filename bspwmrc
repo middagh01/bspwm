@@ -21,3 +21,4 @@ vmware-user-suid-wrapper &
 ~/.config/polybar/./launch.sh &
 picom &
 bspc config border_width 0
+wmname LG3D &
