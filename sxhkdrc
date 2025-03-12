@@ -1,6 +1,13 @@
 #
 # wm independent hotkeys
 #
+# Disminuir brillo
+XF86MonBrightnessDown
+    brightnessctl s 10%-  # Usando brightnessctl
+
+# Aumentar brillo
+XF86MonBrightnessUp
+    brightnessctl s 10%+  # Usando brightnessctl
 
 # terminal emulator
 super + Return 

@@ -28,6 +28,7 @@ main(){
         4) kitty ;;
         #5) req; bspwm; conf; polybar ;;
         5) picom ;;
+        7) zsh ;;
         6) exit 0 ;;
         *) echo "Opción inválida"; sleep 1 ;;
     esac
@@ -38,7 +39,7 @@ req(){
     sudo pacman  -S --noconfirm sudo pacman -S libconfig-devel dbus-devel libev-devel libepoxy-devel pcre2-devel pixman-devel xorgproto libx11-devel libxcb-devel libxcb-composite-devel libxcb-damage-devel libxcb-glx-devel libxcb-image-devel libxcb-present-devel libxcb-randr-devel libxcb-render-devel libxcb-render-util-devel libxcb-shape-devel libxcb-xfixes-devel xcb-util-devel mesa-devel meson ninja uthash
     sudo pacman  -S --noconfirm base-devel git vim xcb-util xcb-util-wm xcb-util-keysyms xcb-util-xrm libxcb xorg-xrandr alsa-lib libxinerama
     sudo pacman -S --noconfirm bspwm kitty polybar rofi meson cmake libev uthash libepoxy pkgconf xorg-server xorg-xinit glfw-x11
-    sudo pacman -S --noconfirm 7zip zsh neofetch imagemagick bat feh firefox
+    sudo pacman -S --noconfirm 7zip zsh neofetch imagemagick bat feh firefox zsh-autocomplete zsh-autosuggestions zsh-zyntax-highlighting brightnessctl    
     sleep 2
     echo "[+] Requetimientos instalados correctamente"
 }
@@ -130,19 +131,6 @@ kitty() {
 
     echo "Imagen copiada correctamente a $imagefin"
 
-picom(){
-    local rutai="$ruta/recursos/picom.conf"
-    local rutaf="$HOME/.config/picom"
-    cp "$rutai" "$rutaf"
-}
-
-
-
-
-
-
-
-
 
     sudo mkdir -p "$destino" || return 1
     echo "Descomprimiendo kitty.txz..."
@@ -157,8 +145,20 @@ picom(){
     mv "$ruta/kitty/kitty.conf" "$HOME/.config/kitty/"
     sudo mv "$HOME/.config/kitty/*" "/root/.config/kitty/"
     sudo fc-cache -f -v
-
 }
-
+picom (){
+    local rutai="$ruta/recursos/picom.conf"
+    local rutaf="$HOME/.config/picom/"
+    cp "$rutai" "$rutaf"
+}
+zsh(){
+    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+    echo "source $HOME/powerlevel10k/powerlevel10k.zsh-theme" >>~/.zshrc
+    rm -r "$HOME/.zshrc"
+    local zshi="$ruta/recursos/.zshrc"
+    local zshf="$HOME/"
+    cp "$zshi" "$zshf"
+    ln -s -f "$HOME/.zshrc" ".zshrc"
+}
 
 main
