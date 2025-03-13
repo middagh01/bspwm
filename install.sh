@@ -161,8 +161,24 @@ zsh(){
     ln -s -f "$HOME/.zshrc" ".zshrc"
 }
 burpsuite(){
-    cd /usr/bin/ || sudo touch burpsuite-launcher
+    cd /usr/bin/  && wget https://raw.githubusercontent.com/middagh01/bspwm/refs/heads/main/raw/burpsuite >> burpsuite-launcher
     sudo chmod +x burpsuite-launcher
 }
-
+#a qui modificare los archivos de la polybar ya de por su funciona ,esto es a gusto de cada quien
+#añadir los iconos que deceen 
+modf(){ 
+    echo '#!/bin/bash' > ~/.config/bspwm/scripts/ethernet_status.sh && echo "echo \"%{F#2495e7}ICONO %{F#ffffff}$(/usr/sbin/ifconfig wlan0 | grep \"inet \" | awk '{print $2}')%{u-}\"" >> ~/.config/bspwm/scripts/ethernet_status.sh
+    local vpni="$ruta/raw/vpn_status.sh"
+    local vpnf="$HOME/.config/bspwm/scripts/"
+    cp "$vpni" "$vpnf"
+    git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf ~/.fzf/install
+    git clone https://github.com/NvChad/starter ~/.config/nvim && nvim
+    sudo mkdir -p /opt/nvim
+    sudo wget https://github.com/neovim/neovim/releases/download/v0.10.4/nvim-linux-arm64.tar.gz -O /opt/nvim/nvim-linux-arm64.tar.gz
+    sudo tar -xf /opt/nvim/nvim-linux-arm64.tar.gz
+    sudo rm -rf /opt/nvim/nvim-linux-arm64.tar.gz
+    echo 'vim.opt.listchars = "tab:»·,trail:·"' >> "$HOME/.config/nvim/init.lua"
+    #esc espacio dh para los temas esc esp ss
+    # ~/.local/share/nvim/lazy/NvChad/lua/nvchad/plugins/init.lua del 76-103
+}
 main
