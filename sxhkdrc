@@ -1,3 +1,180 @@
+//---------------------------------------------------------------------------
+
+#include <vcl.h>
+#pragma hdrstop
+
+#include "Unit1.h"
+//---------------------------------------------------------------------------
+#pragma package(smart_init)
+#pragma resource "*.dfm"
+TForm1 *Form1;
+//---------------------------------------------------------------------------
+__fastcall TForm1::TForm1(TComponent* Owner)
+	: TForm(Owner)
+{
+}
+//---------------------------------------------------------------------------
+bool EsVocal(char x)
+{ AnsiString vocales="aeiouàèìòùAEIOU";
+  return vocales.Pos(x)>0;
+}
+//D:\archivo\ejer2.txt
+Cardinal CantVoc(AnsiString nomArch)
+{ Cardinal c=0; char x;
+  fstream pf(nomArch.c_str());
+  if(!pf.fail()){  //si no fallo al abrir
+	  while(!pf.eof()){//mientras no haiga leido la marca ed fin de archivo
+		 x=pf.get();
+		 if(!pf.eof()){
+			  if(EsVocal(x)){
+				 c++;
+			  }
+		  }
+	  }
+	  pf.close();
+   }
+ return c;
+
+}
+
+void __fastcall TForm1::Button1Click(TObject *Sender)
+{
+ //esto era para saber la ubicacion del archivo el nombre
+   if (OpenTextFileDialog1->Execute())
+   {
+	   Edit1->Text=OpenTextFileDialog1->FileName;
+		Edit2->Text=CantVoc(OpenTextFileDialog1->FileName);
+   }
+
+}
+//---------------------------------------------------------------------------
+Cardinal CantDig(AnsiString nomArch)
+{ Cardinal c=0; char x;
+  fstream pf(nomArch.c_str());
+  if(!pf.fail()){  //si no fallo al abrir
+	  while(!pf.eof()){//mientras no haiga leido la marca ed fin de archivo
+		 x=pf.get();
+		 if(!pf.eof()){
+			  if(isdigit(x)){
+				 c++;
+			  }
+		  }
+	  }
+	  pf.close();
+   }
+ return c;
+
+}
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+  //esto era para saber la ubicacion del archivo el nombre
+   if (OpenTextFileDialog1->Execute())
+   {
+	   Edit1->Text=OpenTextFileDialog1->FileName;
+	   Edit2->Text=CantDig(OpenTextFileDialog1->FileName);
+   }
+
+}
+//---------------------------------------------------------------------------
+/*AnsiString primer_letra_mayuscula(AnsiString nom) {        //{}   []
+
+
+}     */
+bool EsLetra(char x){
+  AnsiString letras="qwertyuiopadfghjklñzxcvbnmQWERTYUIOPASDFGHJKLÑZXCVBNM";
+  return letras.Pos(x)>0;
+}
+void MayusMin(char lin[]){
+   Word i,n,p;   bool sw=false;
+   AnsiString may="QWERTYUIOPASDFGHJKLÑZXCVBNM";
+   AnsiString min="QWERTYUIOPASDFGHJKLÑZXCVBNM";
+   n=strlen(lin);
+   for(i=0; i<n; i++){
+	  if(EsLetra(lin[i])){
+		 if(sw){                        //demas letras
+			 p=may.Pos(lin[i]);
+			 if(p>0){
+				 lin[i]=min[p];
+			 }
+		 }else{            //primer letra
+			 p=min.Pos(lin[i]);
+			  if(p>0)
+				 lin[i]=may[p];
+
+			 sw=true;
+         }
+	  }
+   }
+}
+void ActualizarMayMin(AnsiString nom) {
+  AnsiString linea; char lin[ 500]; Word i,n;
+  fstream pf1(nom.c_str());
+  ofstream pf2("temporal.tmp");
+  if(!pf1.fail()) {
+	  while(!pf1.eof()){
+		   pf1.getline(lin,500);
+		   MayusMin(lin);
+		   n=strlen(lin);
+		   for(i=0; i<n; i++)
+			 pf2.put(lin[i]);
+		   if(!pf1.eof())
+			 pf2.put(10);
+		//   }
+	  }
+	  pf1.close(); pf2.close();
+	  remove(nom.c_str());
+	  rename("temporal.tmp",nom.c_str()) ;
+  }
+
+}
+
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+	  if (OpenTextFileDialog1->Execute())
+   {
+	   Edit1->Text=OpenTextFileDialog1->FileName;
+	   ActualizarMayMin(OpenTextFileDialog1->FileName);
+   }
+}
+//---------------------------------------------------------------------------
+void Actualizar(AnsiString nom) {
+  AnsiString linea; char lin[ 501]; Word i,n;
+  fstream pf1(nom.c_str());
+  ofstream pf2("temporal.tmp");
+  if(!pf1.fail()) {
+	  while(!pf1.eof()){
+		   pf1.getline(lin,500);
+		  linea=lin;
+		   linea=linea.TrimLeft();   //elimina todo lo de la izquierda
+		   strcpy(lin,linea.c_str());//
+		   MayusMin(lin);
+		   n=strlen(lin);
+		   for(i=0; i<n; i++)
+			 pf2.put(lin[i]);
+		   if(!pf1.eof())
+			 pf2.put(10);
+	  }
+	  pf1.close(); pf2.close();
+	  remove(nom.c_str());
+	  rename("temporal.tmp",nom.c_str()) ;
+  }
+
+}
+
+void __fastcall TForm1::Button4Click(TObject *Sender)
+{
+  if (OpenTextFileDialog1->Execute())
+   {
+	   Edit1->Text=OpenTextFileDialog1->FileName;
+	   Actualizar(OpenTextFileDialog1->FileName);
+   }
+}
+//---------------------------------------------------------------------------
+
+
+
+
+
 #
 # wm independent hotkeys
 #
