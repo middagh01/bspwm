@@ -1,3 +1,4 @@
+https://us04web.zoom.us/j/7473516189?pwd=M2gxSHV6aU1zQUpOdE51QmZmYjZrUT09
 #! /bin/sh
 
 pgrep -x sxhkd > /dev/null || sxhkd &
