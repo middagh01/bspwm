@@ -25,81 +25,264 @@ bspc config border_width 0
 wmname LG3D &
 
 
+//---------------------------------------------------------------------------
+
 #include <vcl.h>
 #pragma hdrstop
 
-#include "Unit4.h"
+#include "numeros.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
-TForm4 *Form4;
+TForm1 *Form1;
 //---------------------------------------------------------------------------
-__fastcall TForm4::TForm4(TComponent* Owner)
+__fastcall TForm1::TForm1(TComponent* Owner)
 	: TForm(Owner)
-{ //in=>solo lectura
- //out=>solo escritura(creacion)
- //App=>escritura(al final del archivo)
- //IN|OUT=>lectura y escritura(NO creacion)
-}
-//---------------------------------------------------------------------------
-void __fastcall TForm4::Button1Click(TObject *Sender)
 {
-Edit1->Text="0";
-Edit2->Text="";
-Edit3->Text="";
-Edit4->Text="1";
-Edit5->Text="1";
-Edit6->Text="2000";
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm4::FormCreate(TObject *Sender)
-{  ruta="C:\\Users\\Usuario G\\Desktop\\INF210\\Datos\\";
-	nom="Alumnos.dat";
-	AnsiString nomArch=ruta+nom;
-	fstream f(nomArch.c_str(),ios::binary|ios::in);  //lectura
-	 if (f.fail()) {
-	   f.open(nomArch.c_str(),ios::binary|ios::out); //se crea el archivo
-	 }
-	 f.close();
+float Pot(float x, byte n){
+	float p;
+	if ((x==0)&&(n==0)) {  //precondicion
+		throw new Exception("[!] Error:indeterminado");
+	}else {
+		if (n==0) {
+			p = 1;
+		}else{
+			p = Pot(x,n-1)*x;
+		}
+		return p;
+	}
+}
+
+void __fastcall TForm1::Button2Click(TObject *Sender)
+{
+	Edit3->Text=Pot(StrToFloat(Edit1->Text),StrToInt(Edit2->Text));
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm4::Button2Click(TObject *Sender)
-{ RegAlumno reg; AnsiString nomArch=ruta+nom;
-  AnsiString aux;
-  reg.cod = StrToInt(Edit1->Text);
-  aux=Edit2->Text;
-  strcpy(reg.nom,aux.c_str());
-  aux=Edit3->Text;
-  strcpy(reg.dir,aux.c_str());
-  reg.fecha.dia=StrToInt(Edit4->Text);
-  reg.fecha.mes=StrToInt(Edit5->Text);
-  reg.fecha.año=StrToInt(Edit6->Text);
+//def. recurrente  o iterativas
+//axioma de orden
+//
 
-  fstream f(nomArch.c_str(),ios::binary|ios::app);
-  f.write((char*)&reg,sizeof(reg));//ahora guarda  todo completo por "sizeof"
-  f.close();
-  Button1Click(Sender);//limpiar pantalla
-  ShowMessage("Datos guardados");
+byte SumaDig(Cardinal x){
+	byte s;
+	if (x<10) {
+		s=x;
+	}else{
+		s=SumaDig(x/10) + x%10;
+	}
+	return s;
+}
 
+void __fastcall TForm1::Button3Click(TObject *Sender)
+{
+	Edit3->Text=SumaDig(StrToInt(Edit1->Text));
 }
 //---------------------------------------------------------------------------
-void __fastcall TForm4::Button3Click(TObject *Sender)
-{  AnsiString nomArch=ruta+nom;
-   AnsiString cad="";
-   RegAlumno reg;
-  /* fstream f(nomArch.c_str(),ios::binary|ios::in);
-   f.read((char*)&reg,23);
-   Edit1->Text=reg.cod;
-   Edit2->Text=reg.nom;
-   ShowMessage("SIG");
-   f.read((char*)&reg,23);
-   Edit1->Text=reg.cod;
-   Edit2->Text=reg.nom;   */
-  /* for (byte i=1; i < 23; i++) {
-	 f.read((char*)&x,1)
-	 cad=cad+IntToStr(x)+",";
-
-   }
-   f.close();                   */
+ //operador ternario
+byte SumaDigitosPares( Cardinal x ) {
+  byte sum;
+  if ( x < 10 ) {
+    if ( x % 2 == 0 )
+      sum = x;
+	else
+	  sum = 0;
+  }
+  else {
+	sum = SumaDigitosPares( x / 10 );
+	if ( ( ( x % 10 ) % 2 ) == 0 )
+      sum = sum + ( x % 10 );
+  }
+  return ( sum );
 }
-//----
+void __fastcall TForm1::Button4Click(TObject *Sender)
+{
+	Edit3->Text=SumaDigitosPares(StrToInt(Edit1->Text));
+}
+//---------------------------------------------------------------------------
+//funcion de numeros impares
+byte SumImpar(Cardinal x){
+  byte sum;
+  if ( x < 10 ) {
+	if ( x % 2 == 1 )
+	  sum = x;
+	else
+	  sum = 0;
+  }
+  else {
+	sum = SumaDigitosPares( x / 10 );
+	if ( ( ( x % 10 ) % 2 ) == 1 )
+      sum = sum + ( x % 10 );
+  }
+  return ( sum );
+}
+
+void __fastcall TForm1::Button5Click(TObject *Sender)
+{
+	Edit3->Text=SumImpar(StrToInt(Edit1->Text));
+}
+//---------------------------------------------------------------------------
+bool Ordenado(Cardinal x){
+	//bool esta;
+	/*if (x<10) {
+		esta= true;
+	}else{
+		esta = Ordenado(x/10) && (x/10%10 <= x%10);
+	}
+	return esta;  */
+	return  x<10?x:Ordenado(x/10) && (x/10%10 <= x%10);     //operador ternario
+}
+void __fastcall TForm1::Button6Click(TObject *Sender)
+{
+	if (Ordenado(StrToInt(Edit1->Text))) {
+		Edit3->Text="si esta ordenado";
+	}else{
+		Edit3->Text="no esta ordenado";
+	}
+}
+//---------------------------------------------------------------------------
+void MoverMayor(Cardinal &x){
+	if (x>=10) {
+		byte z = x % 10;
+		x = x / 10;
+		MoverMayor(x);
+		if (z >= x % 10) {
+			x = x * 10 + z;
+		}else{
+			x=(x / 10 * 10 + z) * 10 + x % 10;
+		}
+	}
+}
+void __fastcall TForm1::Button7Click(TObject *Sender)
+{
+	Cardinal z = StrToInt(Edit1->Text);
+	MoverMayor(z);
+	Edit1->Text=z;
+}
+//---------------------------------------------------------------------------
+void ordenar(Cardinal &x){
+	if (x>=10) {  //caso general
+		MoverMayor(x);
+		byte z = x % 10;
+		x = x / 10;
+		ordenar(x);
+		x= x * 10 + z;
+	}
+}
+
+void __fastcall TForm1::Button8Click(TObject *Sender)
+{   Cardinal z=StrToInt(Edit1->Text);
+	ordenar(z);
+	Edit3->Text=z;
+}
+//---------------------------------------------------------------------------
+//conjuntos
+//logica de predicados
+//principio de inducion complta
+//
+
+AnsiString Inverso(AnsiString x){
+	AnsiString y;
+	if (x=="") {
+		y="";
+	}else{
+		char z = x[1];
+		x.Delete(1,1);
+		y=Inverso(x)+z;
+	}
+
+
+	return y;
+}
+
+void __fastcall TForm1::Button9Click(TObject *Sender){
+	Edit3->Text=Inverso(Edit1->Text);
+}
+//---------------------------------------------------------------------------
+AnsiString Inverso2(AnsiString x){
+	AnsiString y;
+	if (x=="") {
+		y="";
+	}else{
+		AnsiString z = x[x.Length()];    //pasamos de chat a ansistring
+		x.Delete(x.Length(),1);
+		y = z + Inverso2(x);    //z debe ser una cadena
+	}
+	return y;
+}
+
+void __fastcall TForm1::Button10Click(TObject *Sender)
+{
+	Edit3->Text=Inverso(Edit1->Text);
+}
+//---------------------------------------------------------------------------
+AnsiString Inverso3(AnsiString x){
+	AnsiString y;
+	if (x=="") {
+		y="";
+	}else if (x.Length()==1) {  //segundo caso base
+		y = x;
+	}
+	else{
+		AnsiString z = x.SubString(1,2);
+		x.Delete(1,2);
+		y = Inverso3(x) + z[2] + z[1];    //z debe ser una cadena
+	}
+	return y;
+}
+void __fastcall TForm1::Button11Click(TObject *Sender)
+{
+	Edit3->Text=Inverso3(Edit1->Text);
+}
+//---------------------------------------------------------------------------
+//inverso4 ,menos los dos ultimos
+AnsiString Inverso4(AnsiString x){
+	AnsiString y; char z1,z2;
+	if (x=="") {
+		y="";
+	}else if (x.Length()==1) {  //segundo caso base
+		y = x;
+	}
+	else{
+		z1 = x[1]; z2=x[x.Length()];
+
+		x.Delete(x.Length(),1); x.Delete(1,1);
+		y=AnsiString(z2) + Inverso4(x) + z1;     //convertimos z2 a AnsiString
+	}
+	return y;
+}
+void __fastcall TForm1::Button12Click(TObject *Sender)
+{
+
+	Edit3->Text=Inverso4(Edit1->Text);
+}
+//---------------------------------------------------------------------------
+bool EsVocal(char z){
+	AnsiString vocales= "aeiouAEIOU";
+	return vocales.Pos(z)>0;
+}
+void EliVocal(AnsiString &x){
+	if (x.Length()>0) { //caso base
+		AnsiString z = x[1];
+		x.Delete(1,1);
+		EliVocal(x);
+		if (!EsVocal(z[1])) {
+			x = z + x;
+		}
+	}
+}
+void __fastcall TForm1::Button13Click(TObject *Sender)
+{   AnsiString z=Edit1->Text;
+	EliVocal(z);
+	Edit3->Text=z;
+}
+//---------------------------------------------------------------------------
+
+
+
+void __fastcall TForm1::Button14Click(TObject *Sender)
+{
+
+
+//---------------------------------------------------------------------------
+
