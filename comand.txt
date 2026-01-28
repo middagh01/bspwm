@@ -1,0 +1,52 @@
+echo 'obase=2; 192 | bc (numeros a binario)
+
+sudo tcpdump -i wlp13s0 -w captura.cap -v
+wireshark captura.cap &>/dev/null & disown
+nmap -Su (para udp) -sn -Pn -n(resolucion dns) -sV (version y servicios de los puertos)
+_________(evacion de firewalls nmap)________________________
+-f ,-sV -sC -D (mas direcciones ip)
+-mtu
+-sn  (ping scan)
+
+______________________________________________________
+
+arp-scan -I (interfas) --localnet 
+______________________________________________________
+masscan -p21,22,139,445 -Pn ip  192.168.0.0/16 --rate=5000
+______________________________________________________
+docker 
+docker build -t my_first_image .     //se debe usar despues de cualquier cambio al dockerfile
+docker pull debian:latest 
+por cada cambio se ejecuta el docker build  
+
+docker run -dit  (-d para ejecutar en segundo plano -it para una consola iterativa) --name myContainer (+nombre del contenedor) | crea un contenedor
+
+docker exec -it (nombre del contenedor )  bash 
+
+docker ps 
+docker stop (id)
+docker ps -a ,ver contenedores finalizados 
+docker -rm (id)  --force 
+docker ps -a -q (devuelve el identificador )
+docker rm $(docker ps -a -q) --force //borra los contenedores 
+docker rmi (id)  //borrar las imagenes
+docker images -q (sacar identificadores de las imagenes )
+docker rmi $(docker images -q) --force 
+algo en tomar en cuenta es que una cosa son las imagenes y otra los contenedores 
+vamos a usar el porfortwarding en docker ,el puerto 80 de la maquina sera el 80 de mi maquina 
+docker run -dit -p 80:80 --name myWebServer webserver 
+docker exec -it myWebServer bash 
+docker run -dit -p 80:80 -v /home/trojan/Desktop/docker/:/var/www/html/ --name myWebServer webserver //se usa para monturas de mi carpeta al contenedor
+
+
+docker build -t webserver .  //crea un contenedor apartir de la imagen 
+docker run -dit -p 80:80 --name myWebServer webserver   //ejecuta el contenedor 
+docker exec -it myWebServer bash  //entra al contenedor 
+subida de archivos con burpsuite
+-------------------------------------------
+port ftp 
+sudo nmap -sCV -p21 127.0.0.1  ,aveces intenta con anonymous ,ingresa como invitado
+-------ssh
+
+openssl s_client  -connect url
+flatpak run org.localsend.localsend_app
